@@ -1,0 +1,80 @@
+# nginx configuration for Multi-Downloader NX
+# Place this file in /etc/nginx/sites-available/anidl
+# Then create a symbolic link: sudo ln -s /etc/nginx/sites-available/anidl /etc/nginx/sites-enabled/
+
+server {
+    listen 80;
+    listen [::]:80;
+    
+    # Replace with your domain name or server IP
+    server_name your-domain.com;
+    
+    # Uncomment the following line after setting up SSL to redirect HTTP to HTTPS
+    # return 301 https://$server_name$request_uri;
+    
+    location / {
+        # Proxy pass to the Node.js application
+        proxy_pass http://localhost:3000;
+        
+        # WebSocket support for real-time updates
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+        
+        # Standard proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Timeout settings for long-running downloads
+        proxy_read_timeout 86400;
+        proxy_connect_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+    
+    # Increase max upload size if needed
+    client_max_body_size 100M;
+    client_body_timeout 300s;
+    
+    # Logging
+    access_log /var/log/nginx/anidl-access.log;
+    error_log /var/log/nginx/anidl-error.log;
+}
+
+# SSL configuration (will be automatically configured by certbot)
+# Uncomment and configure after running: sudo certbot --nginx -d your-domain.com
+#
+# server {
+#     listen 443 ssl http2;
+#     listen [::]:443 ssl http2;
+#     server_name your-domain.com;
+#
+#     # SSL certificates (managed by certbot)
+#     ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+#     include /etc/letsencrypt/options-ssl-nginx.conf;
+#     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+#
+#     location / {
+#         proxy_pass http://localhost:3000;
+#         proxy_http_version 1.1;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection 'upgrade';
+#         proxy_set_header Host $host;
+#         proxy_cache_bypass $http_upgrade;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#         proxy_read_timeout 86400;
+#         proxy_connect_timeout 86400;
+#         proxy_send_timeout 86400;
+#     }
+#
+#     client_max_body_size 100M;
+#     client_body_timeout 300s;
+#
+#     access_log /var/log/nginx/anidl-access.log;
+#     error_log /var/log/nginx/anidl-error.log;
+# }

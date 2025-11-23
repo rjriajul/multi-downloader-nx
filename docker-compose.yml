@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  anidl:
+    build: .
+    container_name: anidl
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount downloads directory - change the path before the colon to your desired location
+      - ./downloads:/app/videos
+      # Mount config directory to persist settings
+      - ./config:/app/config
+      # Mount CDM directories if you have them
+      - ./widevine:/app/widevine
+      - ./playready:/app/playready
+      # Optionally mount fonts directory
+      - ./fonts:/app/fonts
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    # Optional: Set resource limits
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 2G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 1G
