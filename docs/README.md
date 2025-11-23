@@ -4,6 +4,12 @@
 
 This downloader can download anime from different sites. Currently supported are *Crunchyroll*, *Hidive* and *AnimationDigitalNetwork*.
 
+## Quick Links
+
+* 📖 [Full Documentation](https://github.com/anidl/multi-downloader-nx/blob/master/docs/DOCUMENTATION.md)
+* 🚀 [Getting Started Guide](https://github.com/anidl/multi-downloader-nx/blob/master/docs/GET-STARTED.md)
+* 🌐 [VPS Deployment Guide](https://github.com/anidl/multi-downloader-nx/blob/master/docs/VPS-DEPLOYMENT.md) - Deploy to a remote server
+
 ## Legal Warning
 
 This application is not endorsed by or affiliated with *Crunchyroll*, *Hidive* or *AnimationDigitalNetwork*. This application enables you to download videos for offline viewing which may be forbidden by law in your country. The usage of this application may also cause a violation of the *Terms of Service* between you and the stream provider. This tool is not responsible for your actions; please make an informed decision before using this application.
@@ -96,6 +102,50 @@ Then you can cd into the `lib` folder and you will be able to run the CLI or GUI
 ### Build the application into an executable
 
 If you want to package the application, run pnpm run build-`{platform}`-`{type}` where `{platform}` is the operating system (currently the choices are windows, linux, macos, alpine, android, and arm) and `{type}` is cli or gui.
+
+## Docker Deployment
+
+For easy deployment, especially on servers or VPS, you can use Docker:
+
+### Using Docker Compose (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/anidl/multi-downloader-nx.git
+cd multi-downloader-nx
+
+# Add your CDM files to widevine/ and playready/ directories
+# (Required for downloading DRM-protected content)
+
+# Start the application
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop the application
+docker compose down
+```
+
+### Using Docker CLI
+
+```bash
+# Build the image
+docker build -t multi-downloader-nx .
+
+# Run the container
+docker run -d \
+  --name anidl \
+  -p 3000:3000 \
+  -v ./downloads:/app/videos \
+  -v ./config:/app/config \
+  --restart unless-stopped \
+  multi-downloader-nx
+```
+
+The GUI will be available at `http://localhost:3000` or your server's IP address.
+
+For detailed VPS deployment instructions including reverse proxy setup with SSL, see the [VPS Deployment Guide](https://github.com/anidl/multi-downloader-nx/blob/master/docs/VPS-DEPLOYMENT.md).
 
 ## DRM Decryption
 

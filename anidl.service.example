@@ -1,0 +1,62 @@
+# Systemd service file for Multi-Downloader NX
+# Place this file at: /etc/systemd/system/anidl.service
+#
+# After placing the file:
+# 1. Replace YOUR_USERNAME with your actual username
+# 2. Update WorkingDirectory if you installed in a different location
+# 3. Run: sudo systemctl daemon-reload
+# 4. Run: sudo systemctl enable anidl
+# 5. Run: sudo systemctl start anidl
+
+[Unit]
+Description=Multi-Downloader NX GUI Server
+Documentation=https://github.com/anidl/multi-downloader-nx
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# Replace with your actual username
+User=YOUR_USERNAME
+Group=YOUR_USERNAME
+
+# Update this path if you installed in a different location
+WorkingDirectory=/opt/anidl
+
+# Path to the executable
+ExecStart=/opt/anidl/aniDL
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=append:/var/log/anidl/output.log
+StandardError=append:/var/log/anidl/error.log
+SyslogIdentifier=anidl
+
+# Resource limits (optional)
+# LimitNOFILE=65536
+# LimitNPROC=4096
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Protect most of the filesystem
+ProtectSystem=strict
+ProtectHome=true
+
+# Allow write access only to necessary directories
+ReadWritePaths=/opt/anidl/videos /opt/anidl/config /opt/anidl/widevine /opt/anidl/playready /opt/anidl/fonts
+
+# Additional security hardening (optional, uncomment if needed)
+# PrivateDevices=true
+# ProtectKernelTunables=true
+# ProtectControlGroups=true
+# RestrictRealtime=true
+# RestrictNamespaces=true
+
+[Install]
+WantedBy=multi-user.target

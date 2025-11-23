@@ -31,7 +31,6 @@ fonts
 out/
 dist/
 gui/react/build/
-docker-compose.yml
 crunchyendpoints
 .vscode
 .idea
@@ -45,3 +44,6 @@ widevine/*
 !widevine/.gitkeep
 playready/*
 !playready/.gitkeep
+
+# Deployment directories
+downloads/
