@@ -49,11 +49,7 @@ ProtectSystem=strict
 ProtectHome=true
 
 # Allow write access only to necessary directories
-ReadWritePaths=/opt/anidl/videos
-ReadWritePaths=/opt/anidl/config
-ReadWritePaths=/opt/anidl/widevine
-ReadWritePaths=/opt/anidl/playready
-ReadWritePaths=/opt/anidl/fonts
+ReadWritePaths=/opt/anidl/videos /opt/anidl/config /opt/anidl/widevine /opt/anidl/playready /opt/anidl/fonts
 
 # Additional security hardening (optional, uncomment if needed)
 # PrivateDevices=true

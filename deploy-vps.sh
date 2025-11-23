@@ -48,8 +48,26 @@ else
     echo "✓ Docker is already installed"
 fi
 
+# Check if user can run docker without sudo
+if ! docker ps &> /dev/null; then
+    if groups | grep -q docker; then
+        echo "Note: You are in the docker group but may need to log out and back in for it to take effect."
+        echo "Using sudo for docker commands..."
+        DOCKER_CMD="sudo docker"
+    else
+        echo "Note: Your user is not in the docker group. Adding you to the docker group..."
+        sudo usermod -aG docker $USER
+        echo "You will need to log out and log back in for group changes to take effect."
+        echo "Using sudo for docker commands in this session..."
+        DOCKER_CMD="sudo docker"
+    fi
+else
+    echo "✓ You can run docker commands without sudo"
+    DOCKER_CMD="docker"
+fi
+
 # Check if docker compose is available
-if ! docker compose version &> /dev/null; then
+if ! $DOCKER_CMD compose version &> /dev/null; then
     echo "✗ docker compose plugin not found"
     exit 1
 else
@@ -62,7 +80,7 @@ echo "This may take several minutes..."
 echo ""
 
 # Build the Docker image
-sudo docker build -t multi-downloader-nx .
+$DOCKER_CMD build -t multi-downloader-nx .
 
 if [ $? -ne 0 ]; then
     echo "✗ Docker build failed"
