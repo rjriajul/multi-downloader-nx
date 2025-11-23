@@ -48,12 +48,12 @@ else
     echo "✓ Docker is already installed"
 fi
 
-# Check if docker-compose is available
-if ! command -v docker compose &> /dev/null; then
-    echo "✗ docker-compose plugin not found"
+# Check if docker compose is available
+if ! docker compose version &> /dev/null; then
+    echo "✗ docker compose plugin not found"
     exit 1
 else
-    echo "✓ docker-compose is available"
+    echo "✓ docker compose is available"
 fi
 
 echo ""
@@ -89,10 +89,10 @@ echo "   - Place Widevine CDM files in ./widevine/"
 echo "   - Place PlayReady CDM files in ./playready/"
 echo ""
 echo "2. Start the application:"
-echo "   sudo docker-compose up -d"
+echo "   docker compose up -d"
 echo ""
 echo "3. View logs:"
-echo "   sudo docker-compose logs -f"
+echo "   docker compose logs -f"
 echo ""
 echo "4. Access the GUI:"
 echo "   http://YOUR_SERVER_IP:3000"

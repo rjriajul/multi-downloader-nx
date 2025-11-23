@@ -15,7 +15,7 @@ chmod +x deploy-vps.sh
 After the script completes:
 
 1. Add your CDM files to `widevine/` and `playready/` directories
-2. Run: `docker-compose up -d`
+2. Run: `docker compose up -d`
 3. Access at: `http://YOUR_SERVER_IP:3000`
 
 ## Option 2: Manual Docker Deployment
@@ -30,10 +30,10 @@ cd multi-downloader-nx
 
 # Build and run
 docker build -t multi-downloader-nx .
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ## Option 3: Manual Installation (Without Docker)
