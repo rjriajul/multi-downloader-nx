@@ -30,6 +30,8 @@ Before you begin, ensure you have:
 
 Docker deployment is the easiest and most reliable method.
 
+> **Note:** This guide uses the newer Docker Compose plugin syntax (`docker compose` with a space) which is recommended for modern Docker installations. If you have the older standalone `docker-compose` (with hyphen), most commands will work by replacing `docker compose` with `docker-compose`.
+
 #### Step 1: Install Docker
 
 ```bash
@@ -48,12 +50,13 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Install Docker
+# Install Docker (includes Docker Compose plugin)
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # Verify installation
 sudo docker --version
+sudo docker compose version
 ```
 
 #### Step 2: Clone the Repository
@@ -82,7 +85,71 @@ mkdir -p widevine playready
 
 **Note:** You must source CDM files yourself for legal reasons. The application will show an error if no valid CDM is detected.
 
-#### Step 4: Build the Docker Image
+#### Step 4: Deploy with Docker Compose (Recommended)
+
+The easiest way to deploy is using Docker Compose, which handles building and running the container:
+
+```bash
+# Create downloads directory
+mkdir -p downloads
+
+# Build and start the container
+sudo docker compose up -d
+
+# View logs
+sudo docker compose logs -f
+```
+
+Docker Compose will automatically:
+- Build the Docker image
+- Create necessary volumes
+- Configure networking
+- Set restart policies
+- Start the container in the background
+
+#### Step 5: Verify Deployment
+
+```bash
+# Check container status
+sudo docker compose ps
+
+# View logs
+sudo docker compose logs anidl
+
+# Follow logs in real-time
+sudo docker compose logs -f anidl
+```
+
+You should see output indicating the GUI server has started on port 3000.
+
+#### Managing the Deployment
+
+```bash
+# Stop the application
+sudo docker compose stop
+
+# Start the application
+sudo docker compose start
+
+# Restart the application
+sudo docker compose restart
+
+# View logs
+sudo docker compose logs -f
+
+# Rebuild and restart (after pulling updates)
+sudo docker compose up -d --build
+
+# Stop and remove containers (keeps volumes)
+sudo docker compose down
+
+# Stop and remove everything including volumes
+sudo docker compose down -v
+```
+
+#### Alternative: Manual Docker Commands
+
+If you prefer not to use Docker Compose, you can manually build and run:
 
 ```bash
 # Build the Docker image
@@ -90,8 +157,6 @@ sudo docker build -t multi-downloader-nx .
 ```
 
 This process will take several minutes as it installs dependencies and builds the application.
-
-#### Step 5: Run the Container
 
 ```bash
 # Create a directory for downloads on your host system
@@ -115,7 +180,7 @@ sudo docker run -d \
 - `-v ~/anidl-config:/app/config`: Persist configuration
 - `--restart unless-stopped`: Automatically restart on server reboot
 
-#### Step 6: Verify the Container is Running
+Verify the container is running:
 
 ```bash
 # Check container status
@@ -128,9 +193,7 @@ sudo docker logs anidl
 sudo docker logs -f anidl
 ```
 
-You should see output indicating the GUI server has started on port 3000.
-
-#### Managing the Docker Container
+Managing the Docker container manually:
 
 ```bash
 # Stop the container
